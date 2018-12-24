@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}Locatunes{% endblock %}</title>
+    {% load staticfiles %}
+    <link rel="shortcut icon" type="image/png" href="{%  static 'favicon.ico' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="{% static 'music/style.css' %}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script src="{% static 'music/js/main.js' %}"></script>
+</head>
+<body >
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+
+        <!-- Header -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'music:Artists' %}" font-size= "28px"><strong >Locatunes</strong></a>
+        </div>
+
+        <!-- Items -->
+        <div class="collapse navbar-collapse" id="topNavBar">
+            <ul class="nav navbar-nav">
+                <li class="{% block albums_active %}{% endblock %}"><a href="{% url 'music:index' %}"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span>&nbsp; Albums</a></li>
+                <li class="{% block songs_active %}{% endblock %}"><a href="{% url 'music:songs' 'all' %}"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Songs</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'music:index' %}">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="{% url 'music:create_album' %}">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Album
+                    </a>
+                </li>
+                <li>
+                        <a href="{% url 'music:findTutor' %}">
+                            <span class="glyphicon glyphicon-education" aria-hidden="true"></span>&nbsp; Find a Tutor
+                        </a>
+                </li>
+                <li>
+                    <a href="{% url 'music:sell_tickets' %}">
+                         <span class="fa fa-ticket" aria-hidden="true"></span>&nbsp; Sell Tickets
+                    </a>
+                </li>                
+                <li>
+                    <a href="{% url 'music:logout_user' %}">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+{% block body %}
+
+<style>
+        html, body {
+          background: #2c3e50;
+          font-family: 'Montserrat', sans-serif;
+         
+        }
+        
+        
+        
+        h1 {
+          color: #f1c40f;
+          font-size: 4rem;
+          text-transform: uppercase;
+          display: block;
+          width: 100%;
+          text-align: center;
+        }
+        @media screen and (max-width: 600px) {
+          h1 {
+            font-size: 3rem;
+          }
+        }
+        
+        p {
+          color: #f1c40f;
+          font-size: 1.2rem;
+          width: 100%;
+          padding: 20px;
+          text-align: center;
+        }
+        
+        .btns {
+          box-sizing: border-box;
+          -webkit-appearance: none;
+             -moz-appearance: none;
+                  appearance: none;
+          background-color: transparent;
+          border: 2px solid #e74c3c;
+          border-radius: 0.6em;
+          color: #e74c3c;
+          cursor: pointer;
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-item-align: center;
+              align-self: center;
+          font-size: 1rem;
+          font-weight: 400;
+          line-height: 1;
+          margin: 20px;
+          padding: 1.2em 2.8em;
+          text-decoration: none;
+          text-align: center;
+          text-transform: uppercase;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+        }
+        .btn:hover, .btn:focus {
+          color: #fff;
+          outline: 0;
+        }
+        
+        .first {
+          -webkit-transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+          transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+        }
+        .first:hover {
+          box-shadow: 0 0 40px 40px #e74c3c inset;
+        }
+        
+        .second {
+          border-radius: 3em;
+          border-color: #1abc9c;
+          color: #fff;
+          background-image: -webkit-linear-gradient(left, rgba(26, 188, 156, 0.6), rgba(26, 188, 156, 0.6) 5%, #1abc9c 5%, #1abc9c 10%, rgba(26, 188, 156, 0.6) 10%, rgba(26, 188, 156, 0.6) 15%, #1abc9c 15%, #1abc9c 20%, rgba(26, 188, 156, 0.6) 20%, rgba(26, 188, 156, 0.6) 25%, #1abc9c 25%, #1abc9c 30%, rgba(26, 188, 156, 0.6) 30%, rgba(26, 188, 156, 0.6) 35%, #1abc9c 35%, #1abc9c 40%, rgba(26, 188, 156, 0.6) 40%, rgba(26, 188, 156, 0.6) 45%, #1abc9c 45%, #1abc9c 50%, rgba(26, 188, 156, 0.6) 50%, rgba(26, 188, 156, 0.6) 55%, #1abc9c 55%, #1abc9c 60%, rgba(26, 188, 156, 0.6) 60%, rgba(26, 188, 156, 0.6) 65%, #1abc9c 65%, #1abc9c 70%, rgba(26, 188, 156, 0.6) 70%, rgba(26, 188, 156, 0.6) 75%, #1abc9c 75%, #1abc9c 80%, rgba(26, 188, 156, 0.6) 80%, rgba(26, 188, 156, 0.6) 85%, #1abc9c 85%, #1abc9c 90%, rgba(26, 188, 156, 0.6) 90%, rgba(26, 188, 156, 0.6) 95%, #1abc9c 95%, #1abc9c 100%);
+          background-image: linear-gradient(to right, rgba(26, 188, 156, 0.6), rgba(26, 188, 156, 0.6) 5%, #1abc9c 5%, #1abc9c 10%, rgba(26, 188, 156, 0.6) 10%, rgba(26, 188, 156, 0.6) 15%, #1abc9c 15%, #1abc9c 20%, rgba(26, 188, 156, 0.6) 20%, rgba(26, 188, 156, 0.6) 25%, #1abc9c 25%, #1abc9c 30%, rgba(26, 188, 156, 0.6) 30%, rgba(26, 188, 156, 0.6) 35%, #1abc9c 35%, #1abc9c 40%, rgba(26, 188, 156, 0.6) 40%, rgba(26, 188, 156, 0.6) 45%, #1abc9c 45%, #1abc9c 50%, rgba(26, 188, 156, 0.6) 50%, rgba(26, 188, 156, 0.6) 55%, #1abc9c 55%, #1abc9c 60%, rgba(26, 188, 156, 0.6) 60%, rgba(26, 188, 156, 0.6) 65%, #1abc9c 65%, #1abc9c 70%, rgba(26, 188, 156, 0.6) 70%, rgba(26, 188, 156, 0.6) 75%, #1abc9c 75%, #1abc9c 80%, rgba(26, 188, 156, 0.6) 80%, rgba(26, 188, 156, 0.6) 85%, #1abc9c 85%, #1abc9c 90%, rgba(26, 188, 156, 0.6) 90%, rgba(26, 188, 156, 0.6) 95%, #1abc9c 95%, #1abc9c 100%);
+          background-position: 0 0;
+          background-size: 100%;
+          -webkit-transition: background 300ms ease-in-out;
+          transition: background 300ms ease-in-out;
+        }
+        .second:hover {
+          background-position: 100px;
+        }
+        
+        .third {
+          border-color: #3498db;
+          color: #fff;
+          box-shadow: 0 0 40px 40px #3498db inset, 0 0 0 0 #3498db;
+          -webkit-transition: all 150ms ease-in-out;
+          transition: all 150ms ease-in-out;
+        }
+        .third:hover {
+          box-shadow: 0 0 10px 0 #3498db inset, 0 0 10px 4px #3498db;
+        }
+        
+        .fourth {
+          border-color: #f1c40f;
+          color: #fff;
+          background-image: -webkit-linear-gradient(45deg, #f1c40f 50%, transparent 50%);
+          background-image: linear-gradient(45deg, #f1c40f 50%, transparent 50%);
+          background-position: 100%;
+          background-size: 400%;
+          -webkit-transition: background 300ms ease-in-out;
+          transition: background 300ms ease-in-out;
+        }
+        .fourth:hover {
+          background-position: 0;
+        }
+        
+        .fifth {
+          border-color: #8e44ad;
+          border-radius: 0;
+          color: #8e44ad;
+          position: relative;
+          overflow: hidden;
+          z-index: 1;
+          -webkit-transition: color 150ms ease-in-out;
+          transition: color 150ms ease-in-out;
+        }
+        .fifth:after {
+          content: '';
+          position: absolute;
+          display: block;
+          top: 0;
+          left: 50%;
+          -webkit-transform: translateX(-50%);
+                  transform: translateX(-50%);
+          width: 0;
+          height: 100%;
+          background: #8e44ad;
+          z-index: -1;
+          -webkit-transition: width 150ms ease-in-out;
+          transition: width 150ms ease-in-out;
+        }
+        .fifth:hover {
+          color: #fff;
+        }
+        .fifth:hover:after {
+          width: 110%;
+        }
+        
+        .sixth {
+          border-radius: 3em;
+          border-color: #2ecc71;
+          color: #2ecc71;
+          background-image: -webkit-linear-gradient(top, transparent 50%, #2ecc71 50%);
+          background-image: linear-gradient(to bottom, transparent 50%, #2ecc71 50%);
+          background-position: 0% 0%;
+          background-size: 210%;
+          -webkit-transition: background 150ms ease-in-out, color 150ms ease-in-out;
+          transition: background 150ms ease-in-out, color 150ms ease-in-out;
+        }
+        .sixth:hover {
+          color: #fff;
+          background-position: 0 100%;
+        }
+</style>
+{% endblock %}
+</body>
+</html>
